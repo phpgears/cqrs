@@ -1,0 +1,7 @@
+!.gitignore
+composer.lock
+cghooks.lock
+vendor/
+*.cache
+infection-log.*
+build/

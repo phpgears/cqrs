@@ -1,0 +1,111 @@
+{
+  "name": "phpgears/cqrs",
+  "description": "CQRS base",
+  "keywords": [
+    "immutable",
+    "CQRS",
+    "command",
+    "asynchronous command",
+    "query"
+  ],
+  "homepage": "https://github.com/phpgears/cqrs",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Julián Gutiérrez",
+      "email": "juliangut@gmail.com",
+      "homepage": "http://juliangut.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/phpgears/cqrs",
+    "issues": "https://github.com/phpgears/cqrs/issues"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.1",
+    "ext-json": "*",
+    "phpgears/dto": "^0.2"
+  },
+  "require-dev": {
+    "brainmaestro/composer-git-hooks": "^2.1",
+    "friendsofphp/php-cs-fixer": "^2.0",
+    "infection/infection": "^0.9",
+    "phpmd/phpmd": "^2.0",
+    "phpstan/phpstan": "^0.10",
+    "phpstan/phpstan-deprecation-rules": "^0.10",
+    "phpstan/phpstan-phpunit": "^0.10",
+    "phpstan/phpstan-strict-rules": "^0.10",
+    "phpunit/phpunit": "^6.0|^7.0",
+    "povils/phpmnd": "^2.0",
+    "roave/security-advisories": "dev-master",
+    "sebastian/phpcpd": "^4.0",
+    "squizlabs/php_codesniffer": "^2.0",
+    "thecodingmachine/phpstan-strict-rules": "^0.10.1"
+  },
+  "suggest": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Gears\\CQRS\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Gears\\CQRS\\Tests\\": "tests/CQRS/"
+    }
+  },
+  "bin": [
+  ],
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "scripts": {
+    "cghooks": "cghooks",
+    "post-install-cmd": "cghooks add --ignore-lock",
+    "post-update-cmd": "cghooks update",
+    "lint-php": "php -l src && php -l tests",
+    "lint-phpcs": "phpcs --standard=PSR2 src tests",
+    "lint-phpcs-fixer": "php-cs-fixer fix --config=.php_cs --dry-run --verbose",
+    "fix-phpcs": "php-cs-fixer fix --config=.php_cs --verbose",
+    "qa-phpcpd": "phpcpd src",
+    "qa-phpmd": "phpmd src text unusedcode,naming,design,controversial,codesize",
+    "qa-phpmnd": "phpmnd ./ --exclude=tests",
+    "qa-phpstan": "phpstan analyse --configuration=phpstan.neon --memory-limit=2G --no-progress",
+    "test-phpunit": "phpunit",
+    "test-infection": "infection",
+    "report-phpunit-coverage": "phpunit --coverage-html build/coverage",
+    "report-phpunit-clover": "phpunit --coverage-clover build/logs/clover.xml",
+    "lint": [
+      "@lint-php",
+      "@lint-phpcs",
+      "@lint-phpcs-fixer"
+    ],
+    "fix": [
+      "@fix-phpcs"
+    ],
+    "qa": [
+      "@qa-phpcpd",
+      "@qa-phpmd",
+      "@qa-phpmnd",
+      "@qa-phpstan"
+    ],
+    "security": "composer outdated",
+    "test": [
+      "@test-phpunit",
+      "@test-infection"
+    ],
+    "report": [
+      "@report-phpunit-coverage",
+      "@report-phpunit-clover"
+    ]
+  },
+  "extra": {
+    "hooks": {
+      "pre-commit": "composer lint && composer qa && composer test-phpunit"
+    }
+  }
+}
