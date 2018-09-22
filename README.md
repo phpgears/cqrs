@@ -14,7 +14,7 @@
 
 CQRS base classes and handling interfaces
 
-This package only provides the building blocks to CQRS. Actual implementation 
+This package only provides the building blocks to CQRS
 
 ## Installation
 

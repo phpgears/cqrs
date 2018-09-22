@@ -26,7 +26,6 @@
   "prefer-stable": true,
   "require": {
     "php": "^7.1",
-    "ext-json": "*",
     "phpgears/dto": "^0.2"
   },
   "require-dev": {
