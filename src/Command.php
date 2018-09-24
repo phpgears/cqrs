@@ -42,4 +42,13 @@ interface Command
      * @return array<string, mixed>
      */
     public function getPayload(): array;
+
+    /**
+     * Reconstitute command.
+     *
+     * @param mixed[] $parameters
+     *
+     * @return mixed|self
+     */
+    public static function reconstitute(array $parameters);
 }

@@ -39,6 +39,14 @@ abstract class AbstractCommand implements Command
 
     /**
      * {@inheritdoc}
+     */
+    final public static function reconstitute(array $parameters)
+    {
+        return new static($parameters);
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @return string[]
      */

@@ -45,4 +45,11 @@ class AbstractCommandHandlerTest extends TestCase
         $handler = new AbstractCommandHandlerStub();
         $handler->handle($command);
     }
+
+    public function testReconstitute(): void
+    {
+        $command = AbstractCommandStub::reconstitute(['parameter' => 'one']);
+
+        $this->assertTrue($command->has('parameter'));
+    }
 }

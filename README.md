@@ -38,21 +38,50 @@ Commands are DTOs that carry all the information for an action to happen on Writ
 
 You can create your own by implementing `Gears\CQRS\Command` or extend from `Gears\CQRS\AbstractCommand` which ensures command immutability and payload is composed only of scalar values. AbstractCommand has a protected constructor forcing you to create a custom static constructor
 
+```php
+use Gears\CQRS\AbstractCommand;
+
+class CreateUserCommand extends AbstractCommand
+{
+    public static function instance(
+        string $name,
+        string lastname,
+        \DateTimeImmutable $birthDate
+    ): self {
+        return new self([
+            'name' => $name,
+            'lastname' => $lastname,
+            'birthDate' => $birthDate->format('U'),
+        ]);
+    }
+}
+```
+
+#### Async
+
+Having command assuring all of its payload is composed only of scalar values proves handy when you want to delegate command handling to a queue system, serializing/deserializing scalar values is trivial in any format and language
+
+Asynchronous behaviour must be implemented at CommandBus level, command bus must be able to identify async commands (a map of commands, implementing an interface, by a payload parameter, ...) and enqueue them 
+
+_Asynchronous behaviour is out of the scope of this package, this is the whole process of enqueue, dequeue, command serialization and reconstitution, ..._
+
 ### Queries
 
 Queries are DTOs that carry all the information for a request to be made on Read Model
  
  You can create your own by implementing `Gears\CQRS\Query` or extend from `Gears\CQRS\AbstractQuery` which ensures query immutability and payload is composed only of scalar values. AbstractQuery has a protected constructor forcing you to create a custom static constructor
 
-### Async commands
+```php
+use Gears\CQRS\AbstractQuery;
 
-There is a special `Gears\CQRS\AsyncCommand` and corresponding `Gears\CQRS\AbstractAsyncCommand` which are meant to be used when commands are needed to be sent to queue systems so their handling is delegated asynchronously
-
-This is the case where having command assuring all its payload is composed only of scalar values proves handy, serializing and unserializing scalar values is trivial in any format and language
-
-Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries hold their payload
-
-_Asynchronous behaviour must be implemented at CommandBus level and is out of the scope of this package, this is enqueue, dequeue, command serialization and reconstitution, ..._
+class FindUserQuery extends AbstractQuery
+{
+    public static function instance(string $name): self 
+    {
+        return new self(['name' => $name]);
+    }
+}
+```
 
 ### Handlers
 
@@ -60,7 +89,30 @@ Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\C
 
 `AbstractCommandHandler` and `AbstractQueryHandler` are provided, this abstract classes verifies the type of the command/query so you can focus only on implementing the handling logic
 
-Be aware that QueryHandler::handle method must return a DTO object from [phpgears/dto](https://github.com/phpgears/dto)
+```php
+class CreateUserCommandHandler extends AbstractCommandHandler
+{
+    protected function getSupportedCommandType(): string
+    {
+        return CreateUserCommand::class;
+    }
+
+    protected function handleCommand(Command $command): void
+    {
+        /* @var CreateUserCommand $command */
+
+        $user = new User(
+            $command->getName(),
+            $command->getLastname(),
+            $command->getBirthDate()
+        );
+
+        [...]
+    }
+}
+```
+
+Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built and how they hold payload
 
 ### Buses
 

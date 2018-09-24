@@ -2,10 +2,9 @@
   "name": "phpgears/cqrs",
   "description": "CQRS base",
   "keywords": [
-    "immutable",
     "CQRS",
+    "immutable",
     "command",
-    "asynchronous command",
     "query"
   ],
   "homepage": "https://github.com/phpgears/cqrs",
