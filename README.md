@@ -34,16 +34,16 @@ require './vendor/autoload.php';
 
 ### Commands
 
-Commands are DTOs that carry all the information for an action to happen on Write Model
+Commands are DTOs that carry all the information for an action to happen
 
-You can create your own by implementing `Gears\CQRS\Command` or extend from `Gears\CQRS\AbstractCommand` which ensures command immutability and payload is composed only of scalar values. AbstractCommand has a protected constructor forcing you to create a custom static constructor
+You can create your own by implementing `Gears\CQRS\Command` or extend from `Gears\CQRS\AbstractCommand` which ensures command immutability and payload is composed only of **scalar values** which is a very interesting capability. AbstractCommand has a protected constructor forcing you to create a custom static named constructors
 
 ```php
 use Gears\CQRS\AbstractCommand;
 
 class CreateUserCommand extends AbstractCommand
 {
-    public static function instance(
+    public static function fromPersonalData(
         string $name,
         string lastname,
         \DateTimeImmutable $birthDate
@@ -57,26 +57,26 @@ class CreateUserCommand extends AbstractCommand
 }
 ```
 
-#### Async
+#### Async commands
 
-Having command assuring all of its payload is composed only of scalar values proves handy when you want to delegate command handling to a queue system, serializing/deserializing scalar values is trivial in any format and language
+Having command assuring all of its payload is composed only of scalar values proves handy when you want to delegate command handling to a message queue system such as RabbitMQ, Gearman or Apache Kafka, serializing/deserializing scalar values is trivial in any format and language
 
 Asynchronous behaviour must be implemented at CommandBus level, command bus must be able to identify async commands (a map of commands, implementing an interface, by a payload parameter, ...) and enqueue them 
 
-_Asynchronous behaviour is out of the scope of this package, this is the whole process of enqueue, dequeue, command serialization and reconstitution, ..._
+If you want to have asynchronous behaviour on your CommandBus have a look [phpgears/cqrs-async](https://github.com/phpgears/cqrs-async), there you'll find all the necessary pieces to start your async command bus, for example using queue-interop with [phpgears/cqrs-async-queue-interop](https://github.com/phpgears/cqrs-async-queue-interop)
 
 ### Queries
 
-Queries are DTOs that carry all the information for a request to be made on Read Model
+Queries are DTOs that carry all the information for a request to be made to the data source
  
- You can create your own by implementing `Gears\CQRS\Query` or extend from `Gears\CQRS\AbstractQuery` which ensures query immutability and payload is composed only of scalar values. AbstractQuery has a protected constructor forcing you to create a custom static constructor
+ You can create your own by implementing `Gears\CQRS\Query` or extend from `Gears\CQRS\AbstractQuery` which ensures query immutability and payload is composed only of scalar values. AbstractQuery has a protected constructor forcing you to create a custom static named constructors
 
 ```php
 use Gears\CQRS\AbstractQuery;
 
 class FindUserQuery extends AbstractQuery
 {
-    public static function instance(string $name): self 
+    public static function fromName(string $name): self 
     {
         return new self(['name' => $name]);
     }
@@ -87,7 +87,7 @@ class FindUserQuery extends AbstractQuery
 
 Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\CQRS\QueryHandler` respectively on their corresponding buses
 
-`AbstractCommandHandler` and `AbstractQueryHandler` are provided, this abstract classes verifies the type of the command/query so you can focus only on implementing the handling logic
+`AbstractCommandHandler` and `AbstractQueryHandler` are provided in this package, this abstract classes verifies the type of the command/query so you can focus only on implementing the handling logic
 
 ```php
 class CreateUserCommandHandler extends AbstractCommandHandler
@@ -112,43 +112,17 @@ class CreateUserCommandHandler extends AbstractCommandHandler
 }
 ```
 
-Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built and how they hold payload
+Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built and how they hold their payload
 
 ### Buses
 
 Only `Gears\CQRS\CommandBus` and `Gears\CQRS\QueryBus` interfaces are provided, you can easily use any of the good bus libraries available out there by simply adding an adapter layer
 
-As an example this is an implementation of CommandBus using [tactician](https://github.com/thephpleague/tactician):
+#### Implementations
 
-```php
-use Gears\CQRS\Command;
-use Gears\CQRS\CommandBus;
-use League\Tactician\CommandBus as TacticianCommandBus;
+Available CQRS buses implementations
 
-final class CommandBusImpl implements CommandBus
-{
-    /**
-     * @var TacticianCommandBus
-     */
-    private $wrappedCommandBus;
-
-    /**
-     * @param TacticianCommandBus $wrappedCommandBus
-     */
-    public function __construct(TacticianCommandBus $wrappedCommandBus)
-    {
-        $this->wrappedCommandBus = $wrappedCommandBus;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(Command $command): void
-    {
-        $this->wrappedCommandBus->handle($command);
-    }
-}
-```
+* [phpgears/cqrs-tactician](https://github.com/phpgears/cqrs-tactician) uses League's Tactician
 
 ## Contributing
 
