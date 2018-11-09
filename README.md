@@ -36,7 +36,7 @@ require './vendor/autoload.php';
 
 Commands are DTOs that carry all the information for an action to happen
 
-You can create your own by implementing `Gears\CQRS\Command` or extend from `Gears\CQRS\AbstractCommand` which ensures command immutability and payload is composed only of **scalar values** which is a very interesting capability. AbstractCommand has a protected constructor forcing you to create a custom static named constructors
+You can create your own by implementing `Gears\CQRS\Command` or extend from `Gears\CQRS\AbstractCommand` which ensures command immutability and payload is composed only of **scalar values** which is a very interesting capability. AbstractCommand has a protected constructor forcing you to create custom static named constructors
 
 ```php
 use Gears\CQRS\AbstractCommand;
@@ -53,6 +53,19 @@ class CreateUserCommand extends AbstractCommand
             'lastname' => $lastname,
             'birthDate' => $birthDate->format('U'),
         ]);
+    }
+}
+```
+
+In case of a command without any payload you could extend `Gears\CQRS\AbstractEmptyCommand`
+
+```php
+use Gears\CQRS\AbstractCommand;
+
+class CreateUserCommand extends AbstractEmptyCommand
+{
+    public static function instance(): self {
+        return new self();
     }
 }
 ```
@@ -112,7 +125,7 @@ class CreateUserCommandHandler extends AbstractCommandHandler
 }
 ```
 
-Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built and how they hold their payload
+Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built out of DTOs and how they hold their payload
 
 ### Buses
 
@@ -120,7 +133,7 @@ Only `Gears\CQRS\CommandBus` and `Gears\CQRS\QueryBus` interfaces are provided, 
 
 #### Implementations
 
-Available CQRS buses implementations
+CQRS buses implementations currently available
 
 * [phpgears/cqrs-tactician](https://github.com/phpgears/cqrs-tactician) uses League's Tactician
 
