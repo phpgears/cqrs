@@ -32,15 +32,15 @@
     "friendsofphp/php-cs-fixer": "^2.0",
     "infection/infection": "^0.9",
     "phpmd/phpmd": "^2.0",
-    "phpstan/phpstan": "^0.10",
-    "phpstan/phpstan-deprecation-rules": "^0.10",
-    "phpstan/phpstan-strict-rules": "^0.10",
+    "phpstan/phpstan": "^0.11",
+    "phpstan/phpstan-deprecation-rules": "^0.11",
+    "phpstan/phpstan-strict-rules": "^0.11",
     "phpunit/phpunit": "^6.0|^7.0",
     "povils/phpmnd": "^2.0",
     "roave/security-advisories": "dev-master",
     "sebastian/phpcpd": "^3.0|^4.0",
     "squizlabs/php_codesniffer": "^2.0",
-    "thecodingmachine/phpstan-strict-rules": "^0.10.1"
+    "thecodingmachine/phpstan-strict-rules": "^0.11"
   },
   "suggest": {
   },
