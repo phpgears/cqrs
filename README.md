@@ -135,6 +135,7 @@ Only `Gears\CQRS\CommandBus` and `Gears\CQRS\QueryBus` interfaces are provided, 
 
 CQRS buses implementations currently available
 
+* [phpgears/cqrs-symfony-messenger](https://github.com/phpgears/cqrs-symfony-messenger) uses Symfony's Messenger
 * [phpgears/cqrs-tactician](https://github.com/phpgears/cqrs-tactician) uses League's Tactician
 
 ## Contributing
