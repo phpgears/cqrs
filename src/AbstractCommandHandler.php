@@ -28,7 +28,7 @@ abstract class AbstractCommandHandler implements CommandHandler
         $supportedCommandType = $this->getSupportedCommandType();
         if (!\is_a($command, $supportedCommandType)) {
             throw new InvalidCommandException(\sprintf(
-                'Command must be a %s, %s given',
+                'Command must be a "%s", "%s" given',
                 $supportedCommandType,
                 \get_class($command)
             ));

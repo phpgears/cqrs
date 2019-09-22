@@ -28,7 +28,7 @@ abstract class AbstractQueryHandler implements QueryHandler
         $supportedQueryType = $this->getSupportedQueryType();
         if (!\is_a($query, $supportedQueryType)) {
             throw new InvalidQueryException(\sprintf(
-                'Query command must be a %s, %s given',
+                'Query command must be a "%s", "%s" given',
                 $supportedQueryType,
                 \get_class($query)
             ));

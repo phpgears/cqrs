@@ -32,7 +32,7 @@ abstract class AbstractQuery implements Query
      */
     final protected function __construct(array $parameters)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->setPayload($parameters);
     }

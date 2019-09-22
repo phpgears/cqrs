@@ -32,7 +32,7 @@ abstract class AbstractCommand implements Command
      */
     final protected function __construct(array $parameters)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->setPayload($parameters);
     }

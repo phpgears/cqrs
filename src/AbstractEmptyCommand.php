@@ -30,7 +30,7 @@ abstract class AbstractEmptyCommand implements Command
      */
     final protected function __construct()
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
     }
 
     /**

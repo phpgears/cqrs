@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Gears\CQRS\Tests;
 
 use Gears\CQRS\AbstractQuery;
+use Gears\CQRS\Exception\InvalidQueryException;
 use Gears\CQRS\Tests\Stub\AbstractQueryHandlerStub;
 use Gears\CQRS\Tests\Stub\AbstractQueryStub;
 use Gears\DTO\DTO;
@@ -28,15 +29,14 @@ class AbstractQueryHandlerTest extends TestCase
     {
         $handler = new AbstractQueryHandlerStub();
 
-        $this->assertInstanceOf(DTO::class, $handler->handle(AbstractQueryStub::instance()));
+        static::assertInstanceOf(DTO::class, $handler->handle(AbstractQueryStub::instance()));
     }
 
-    /**
-     * @expectedException \Gears\CQRS\Exception\InvalidQueryException
-     * @expectedExceptionMessageRegExp /Query command must be a .+\\AbstractQueryStub, .+ given/
-     */
     public function testInvalidQueryType(): void
     {
+        $this->expectException(InvalidQueryException::class);
+        $this->expectExceptionMessageRegExp('/^Query command must be a ".+\\\AbstractQueryStub", ".+" given$/');
+
         /** @var AbstractQuery $query */
         $query = $this->getMockBuilder(AbstractQuery::class)
             ->disableOriginalConstructor()

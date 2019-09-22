@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Tests;
 
+use Gears\CQRS\Exception\InvalidCommandException;
 use Gears\CQRS\Tests\Stub\AbstractCommandHandlerStub;
 use Gears\CQRS\Tests\Stub\AbstractCommandStub;
 use Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub;
@@ -23,12 +24,11 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractCommandHandlerTest extends TestCase
 {
-    /**
-     * @expectedException \Gears\CQRS\Exception\InvalidCommandException
-     * @expectedExceptionMessageRegExp /Command must be a .+\\AbstractCommandStub, .+ given/
-     */
     public function testInvalidCommandType(): void
     {
+        $this->expectException(InvalidCommandException::class);
+        $this->expectExceptionMessageRegExp('/^Command must be a ".+\\\AbstractCommandStub", ".+" given$/');
+
         $handler = new AbstractCommandHandlerStub();
         $handler->handle(AbstractEmptyCommandStub::instance());
     }
@@ -38,17 +38,17 @@ class AbstractCommandHandlerTest extends TestCase
         $handler = new AbstractCommandHandlerStub();
         $handler->handle(AbstractCommandStub::instance());
 
-        $this->assertTrue(true);
+        static::assertTrue(true);
     }
 
     public function testReconstitute(): void
     {
         $command = AbstractCommandStub::reconstitute(['parameter' => 'one']);
 
-        $this->assertTrue($command->has('parameter'));
+        static::assertTrue($command->has('parameter'));
 
         $emptyCommand = AbstractEmptyCommandStub::reconstitute(['parameter' => 'one']);
 
-        $this->assertFalse($emptyCommand->has('parameter'));
+        static::assertFalse($emptyCommand->has('parameter'));
     }
 }
