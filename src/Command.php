@@ -19,6 +19,13 @@ namespace Gears\CQRS;
 interface Command
 {
     /**
+     * Get command type.
+     *
+     * @return string
+     */
+    public function getCommandType(): string;
+
+    /**
      * Check parameter existence.
      *
      * @param string $parameter

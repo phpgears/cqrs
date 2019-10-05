@@ -17,16 +17,16 @@ use Gears\DTO\ScalarPayloadBehaviour;
 use Gears\Immutability\ImmutabilityBehaviour;
 
 /**
- * Abstract empty immutable serializable command.
+ * Abstract empty immutable serializable query.
  */
-abstract class AbstractEmptyCommand implements Command
+abstract class AbstractEmptyQuery implements Query
 {
     use ImmutabilityBehaviour, ScalarPayloadBehaviour {
         ScalarPayloadBehaviour::__call insteadof ImmutabilityBehaviour;
     }
 
     /**
-     * AbstractEmptyCommand constructor.
+     * AbstractEmptyQuery constructor.
      */
     final protected function __construct()
     {
@@ -36,21 +36,9 @@ abstract class AbstractEmptyCommand implements Command
     /**
      * {@inheritdoc}
      */
-    public function getCommandType(): string
+    public function getQueryType(): string
     {
         return \get_called_class();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    final public static function reconstitute(array $parameters)
-    {
-        $commandClass = \get_called_class();
-
-        return new $commandClass();
     }
 
     /**
@@ -60,6 +48,6 @@ abstract class AbstractEmptyCommand implements Command
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [Command::class];
+        return [Query::class];
     }
 }

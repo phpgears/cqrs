@@ -19,6 +19,13 @@ namespace Gears\CQRS;
 interface Query
 {
     /**
+     * Get query type.
+     *
+     * @return string
+     */
+    public function getQueryType(): string;
+
+    /**
      * Check parameter existence.
      *
      * @param string $parameter

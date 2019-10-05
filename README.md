@@ -60,7 +60,7 @@ class CreateUserCommand extends AbstractCommand
 In case of a command without any payload you could extend `Gears\CQRS\AbstractEmptyCommand`
 
 ```php
-use Gears\CQRS\AbstractCommand;
+use Gears\CQRS\AbstractEmptyCommand;
 
 class CreateUserCommand extends AbstractEmptyCommand
 {
@@ -96,6 +96,19 @@ class FindUserQuery extends AbstractQuery
 }
 ```
 
+In case of a query without any payload you could extend `Gears\CQRS\AbstractEmptyQuery`
+
+```php
+use Gears\CQRS\AbstractEmptyQuery;
+
+class FindAllUsersQuery extends AbstractEmptyQuery
+{
+    public static function instance(): self {
+        return new self();
+    }
+}
+```
+
 ### Handlers
 
 Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\CQRS\QueryHandler` respectively on their corresponding buses
@@ -120,7 +133,24 @@ class CreateUserCommandHandler extends AbstractCommandHandler
             $command->getBirthDate()
         );
 
-        [...]
+        // ...
+    }
+}
+
+class FindUserQueryHandler extends AbstractQueryHandler
+{
+    protected function getSupportedQueryType(): string
+    {
+        return FindUserQuery::class;
+    }
+
+    protected function handleCommand(Query $query): DTO
+    {
+        /* @var FindUserQuery $query */
+
+        // Retrieve user from persistence by it's name $query->getName()
+
+        return new UserDTO(/* parameters */);
     }
 }
 ```

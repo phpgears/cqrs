@@ -39,6 +39,14 @@ abstract class AbstractQuery implements Query
 
     /**
      * {@inheritdoc}
+     */
+    public function getQueryType(): string
+    {
+        return \get_called_class();
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @return string[]
      */

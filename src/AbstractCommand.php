@@ -40,9 +40,19 @@ abstract class AbstractCommand implements Command
     /**
      * {@inheritdoc}
      */
+    public function getCommandType(): string
+    {
+        return \get_called_class();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     final public static function reconstitute(array $parameters)
     {
-        return new static($parameters);
+        $commandClass = \get_called_class();
+
+        return new $commandClass($parameters);
     }
 
     /**
