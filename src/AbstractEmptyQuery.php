@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS;
 
+use Gears\CQRS\Exception\QueryException;
 use Gears\DTO\ScalarPayloadBehaviour;
 use Gears\Immutability\ImmutabilityBehaviour;
 
@@ -39,6 +40,37 @@ abstract class AbstractEmptyQuery implements Query
     public function getQueryType(): string
     {
         return static::class;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    final public function __serialize(): array
+    {
+        throw new QueryException(\sprintf('Query "%s" cannot be serialized', static::class));
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    final public function __unserialize(array $data): void
+    {
+        throw new QueryException(\sprintf('Query "%s" cannot be unserialized', static::class));
+    }
+
+    /**
+     * @return string[]
+     */
+    final public function __sleep(): array
+    {
+        throw new QueryException(\sprintf('Query "%s" cannot be serialized', static::class));
+    }
+
+    final public function __wakeup(): void
+    {
+        throw new QueryException(\sprintf('Query "%s" cannot be unserialized', static::class));
     }
 
     /**

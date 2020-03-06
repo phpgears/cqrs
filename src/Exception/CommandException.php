@@ -13,6 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Exception;
 
-class InvalidQueryException extends QueryException
+class CommandException extends \LogicException
 {
 }

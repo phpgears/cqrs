@@ -13,6 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Exception;
 
-class InvalidQueryHandlerException extends \RuntimeException
+class InvalidQueryHandlerException extends QueryException
 {
 }

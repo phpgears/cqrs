@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Tests;
 
+use Gears\CQRS\Exception\QueryException;
 use Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub;
 use PHPUnit\Framework\TestCase;
 
@@ -26,5 +27,21 @@ class AbstractEmptyQueryTest extends TestCase
         $stub = AbstractEmptyQueryStub::instance();
 
         static::assertEquals(AbstractEmptyQueryStub::class, $stub->getQueryType());
+    }
+
+    public function testNoSerialization(): void
+    {
+        $this->expectException(QueryException::class);
+        $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub" cannot be serialized');
+
+        \serialize(AbstractEmptyQueryStub::instance());
+    }
+
+    public function testNoDeserialization(): void
+    {
+        $this->expectException(QueryException::class);
+        $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub" cannot be unserialized');
+
+        \unserialize('O:44:"Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub":0:{}');
     }
 }
