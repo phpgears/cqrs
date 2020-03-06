@@ -38,7 +38,7 @@ abstract class AbstractEmptyCommand implements Command
      */
     public function getCommandType(): string
     {
-        return \get_called_class();
+        return static::class;
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class AbstractEmptyCommand implements Command
      */
     final public static function reconstitute(array $parameters)
     {
-        $commandClass = \get_called_class();
+        $commandClass = static::class;
 
         return new $commandClass();
     }

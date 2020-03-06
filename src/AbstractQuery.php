@@ -17,7 +17,7 @@ use Gears\DTO\ScalarPayloadBehaviour;
 use Gears\Immutability\ImmutabilityBehaviour;
 
 /**
- * Abstract immutable serializable query.
+ * Abstract immutable query.
  */
 abstract class AbstractQuery implements Query
 {
@@ -42,7 +42,7 @@ abstract class AbstractQuery implements Query
      */
     public function getQueryType(): string
     {
-        return \get_called_class();
+        return static::class;
     }
 
     /**
