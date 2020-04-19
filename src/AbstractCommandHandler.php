@@ -15,6 +15,7 @@ namespace Gears\CQRS;
 
 use Gears\CQRS\Exception\InvalidCommandException;
 use Gears\CQRS\Exception\InvalidQueryException;
+use Gears\DTO\DTO;
 
 abstract class AbstractCommandHandler implements CommandHandler
 {
@@ -23,7 +24,7 @@ abstract class AbstractCommandHandler implements CommandHandler
      *
      * @throws InvalidQueryException
      */
-    final public function handle(Command $command): void
+    final public function handle(Command $command): ?DTO
     {
         if ($command->getCommandType() !== $this->getSupportedCommandType()) {
             throw new InvalidCommandException(\sprintf(
@@ -49,5 +50,5 @@ abstract class AbstractCommandHandler implements CommandHandler
      *
      * @param Command $command
      */
-    abstract protected function handleCommand(Command $command): void;
+    abstract protected function handleCommand(Command $command): ?DTO;
 }

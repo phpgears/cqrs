@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Gears\CQRS;
 
+use Gears\DTO\DTO;
+
 interface CommandHandler
 {
     /**
@@ -20,5 +22,5 @@ interface CommandHandler
      *
      * @param Command $command
      */
-    public function handle(Command $command): void;
+    public function handle(Command $command): ?DTO;
 }

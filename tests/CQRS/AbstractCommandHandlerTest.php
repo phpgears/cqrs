@@ -17,6 +17,7 @@ use Gears\CQRS\Exception\InvalidCommandException;
 use Gears\CQRS\Tests\Stub\AbstractCommandHandlerStub;
 use Gears\CQRS\Tests\Stub\AbstractCommandStub;
 use Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub;
+use Gears\CQRS\Tests\Stub\DTOStub;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,9 +39,9 @@ class AbstractCommandHandlerTest extends TestCase
     public function testHandling(): void
     {
         $handler = new AbstractCommandHandlerStub();
-        $handler->handle(AbstractCommandStub::instance());
+        $result = $handler->handle(AbstractCommandStub::instance());
 
-        static::assertTrue(true);
+        static::assertTrue($result instanceof DTOStub);
     }
 
     public function testReconstitute(): void

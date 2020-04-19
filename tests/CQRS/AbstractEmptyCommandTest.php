@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Gears\CQRS\Tests;
 
 use Gears\CQRS\Exception\CommandException;
+use Gears\CQRS\Tests\Stub\AbstractEmptyCommandHandlerStub;
 use Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub;
 use PHPUnit\Framework\TestCase;
 
@@ -52,5 +53,13 @@ class AbstractEmptyCommandTest extends TestCase
         );
 
         \unserialize('O:46:"Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub":0:{}');
+    }
+
+    public function testHandling(): void
+    {
+        $handler = new AbstractEmptyCommandHandlerStub();
+        $result = $handler->handle(AbstractEmptyCommandStub::instance());
+
+        static::assertNull($result);
     }
 }
