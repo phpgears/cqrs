@@ -28,7 +28,7 @@ abstract class AbstractCommandHandler implements CommandHandler
         if ($command->getCommandType() !== $this->getSupportedCommandType()) {
             throw new InvalidCommandException(\sprintf(
                 'Command handler "%s" can only handle "%s" commands, "%s" given',
-                self::class,
+                static::class,
                 $this->getSupportedCommandType(),
                 $command->getCommandType()
             ));
