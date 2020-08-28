@@ -25,9 +25,9 @@ class AbstractQueryHandlerStub extends AbstractQueryHandler
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedQueryType(): string
+    protected function getSupportedQueryTypes(): array
     {
-        return AbstractQueryStub::class;
+        return [AbstractQueryStub::class];
     }
 
     /**

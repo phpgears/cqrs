@@ -25,11 +25,11 @@ abstract class AbstractCommandHandler implements CommandHandler
      */
     final public function handle(Command $command): void
     {
-        if ($command->getCommandType() !== $this->getSupportedCommandType()) {
+        if (!\in_array($command->getCommandType(), $this->getSupportedCommandTypes(), true)) {
             throw new InvalidCommandException(\sprintf(
-                'Command handler "%s" can only handle "%s" commands, "%s" given',
+                'Command handler "%s" can only handle "%s" command types, "%s" given',
                 static::class,
-                $this->getSupportedCommandType(),
+                \implode('", "', $this->getSupportedCommandTypes()),
                 $command->getCommandType()
             ));
         }
@@ -38,11 +38,11 @@ abstract class AbstractCommandHandler implements CommandHandler
     }
 
     /**
-     * Get supported command type.
+     * Get supported command types.
      *
-     * @return string
+     * @return string[]
      */
-    abstract protected function getSupportedCommandType(): string;
+    abstract protected function getSupportedCommandTypes(): array;
 
     /**
      * Handle command.

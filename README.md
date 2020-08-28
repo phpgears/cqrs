@@ -132,12 +132,17 @@ Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\C
 
 `AbstractCommandHandler` and `AbstractQueryHandler` are provided in this package, this abstract classes verifies the type of the Command/Query so you can focus only on implementing the handling logic
 
+A Command/Query Handler can be set to handle one or more Command/Query. It is controlled by the returned Command/Query types at `getSupportedQueryTypes` and `getSupportedCommandTypes`
+
 ```php
+use Gears\CQRS\AbstractCommandHandler;
+use Gears\CQRS\Command;
+
 class CreateUserCommandHandler extends AbstractCommandHandler
 {
-    protected function getSupportedCommandType(): string
+    protected function getSupportedCommandTypes(): array
     {
-        return CreateUserCommand::class;
+        return [CreateUserCommand::class];
     }
 
     protected function handleCommand(Command $command): void
@@ -153,15 +158,21 @@ class CreateUserCommandHandler extends AbstractCommandHandler
         // ...
     }
 }
+```
+
+```php
+use Gears\DTO\DTO;
+use Gears\CQRS\AbstractQueryHandler;
+use Gears\CQRS\Query;
 
 class FindUserQueryHandler extends AbstractQueryHandler
 {
-    protected function getSupportedQueryType(): string
+    protected function getSupportedQueryTypes(): array
     {
-        return FindUserQuery::class;
+        return [FindUserQuery::class];
     }
 
-    protected function handleCommand(Query $query): DTO
+    protected function handleQuery(Query $query): DTO
     {
         /* @var FindUserQuery $query */
 

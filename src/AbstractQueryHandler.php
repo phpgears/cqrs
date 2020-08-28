@@ -25,11 +25,11 @@ abstract class AbstractQueryHandler implements QueryHandler
      */
     final public function handle(Query $query): DTO
     {
-        if ($query->getQueryType() !== $this->getSupportedQueryType()) {
+        if (!\in_array($query->getQueryType(), $this->getSupportedQueryTypes(), true)) {
             throw new InvalidQueryException(\sprintf(
-                'Query handler "%s" can only handle "%s" queries, "%s" given',
+                'Query handler "%s" can only handle "%s" query types, "%s" given',
                 static::class,
-                $this->getSupportedQueryType(),
+                \implode('", "', $this->getSupportedQueryTypes()),
                 $query->getQueryType()
             ));
         }
@@ -38,11 +38,11 @@ abstract class AbstractQueryHandler implements QueryHandler
     }
 
     /**
-     * Get supported query type.
+     * Get supported query types.
      *
-     * @return string
+     * @return string[]
      */
-    abstract protected function getSupportedQueryType(): string;
+    abstract protected function getSupportedQueryTypes(): array;
 
     /**
      * Handle query.

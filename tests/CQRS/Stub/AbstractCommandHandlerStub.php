@@ -24,9 +24,9 @@ class AbstractCommandHandlerStub extends AbstractCommandHandler
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedCommandType(): string
+    protected function getSupportedCommandTypes(): array
     {
-        return AbstractCommandStub::class;
+        return [AbstractCommandStub::class];
     }
 
     /**

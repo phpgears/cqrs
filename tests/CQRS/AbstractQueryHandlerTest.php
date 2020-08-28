@@ -29,7 +29,7 @@ class AbstractQueryHandlerTest extends TestCase
     {
         $this->expectException(InvalidQueryException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Query handler ".+" can only handle ".+\\\AbstractQueryStub" queries, ".+" given$/'
+            '/^Query handler ".+" can only handle ".+\\\AbstractQueryStub" query types, ".+" given$/'
         );
 
         $handler = new AbstractQueryHandlerStub();
