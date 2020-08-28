@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS\Tests;
 
-use Gears\CQRS\Exception\CommandException;
 use Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub;
 use PHPUnit\Framework\TestCase;
 
@@ -48,23 +47,5 @@ class AbstractEmptyCommandTest extends TestCase
         $stub = AbstractEmptyCommandStub::reconstitute(['parameter' => 'value']);
 
         static::assertEquals([], $stub->getPayload());
-    }
-
-    public function testNoSerialization(): void
-    {
-        $this->expectException(CommandException::class);
-        $this->expectExceptionMessage('Command "Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub" cannot be serialized');
-
-        \serialize(AbstractEmptyCommandStub::instance());
-    }
-
-    public function testNoDeserialization(): void
-    {
-        $this->expectException(CommandException::class);
-        $this->expectExceptionMessage(
-            'Command "Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub" cannot be unserialized'
-        );
-
-        \unserialize('O:46:"Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub":0:{}');
     }
 }
