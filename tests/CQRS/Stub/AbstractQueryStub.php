@@ -23,10 +23,12 @@ class AbstractQueryStub extends AbstractQuery
     /**
      * Instantiate query.
      *
+     * @param iterable $payload
+     *
      * @return self
      */
-    public static function instance(): self
+    public static function instance(iterable $payload): self
     {
-        return new self([]);
+        return new self($payload);
     }
 }

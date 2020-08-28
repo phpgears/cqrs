@@ -34,86 +34,103 @@ require './vendor/autoload.php';
 
 ### Commands
 
-Commands are DTOs that carry all the information for an action to happen
+Commands are immutable DTOs that carry all the information for an action to take place. A Command should be valid from the moment it is created and thus do not allow to mutable its properties
 
-You can create your own by implementing `Gears\CQRS\Command` or extend from `Gears\CQRS\AbstractCommand` which ensures command immutability and payload is composed only of **scalar values** which is a very interesting capability. AbstractCommand has a protected constructor forcing you to create custom static named constructors
+Extend from `Gears\CQRS\AbstractCommand` to ensure command immutability and the payload is only composed of **scalar values**, allowing for easy serialization and interoperability. AbstractCommand has a protected constructor forcing you to create custom static named constructors
 
 ```php
 use Gears\CQRS\AbstractCommand;
-
+/**
+ * @method getName(): string
+ * @method getLastName(): string
+ */
 class CreateUserCommand extends AbstractCommand
 {
+    private $name;
+
+    private $lastName;
+
+    private $birthDate;
+
     public static function fromPersonalData(
         string $name,
-        string lastname,
+        string $lastName,
         \DateTimeImmutable $birthDate
     ): self {
         return new self([
             'name' => $name,
-            'lastname' => $lastname,
-            'birthDate' => $birthDate->format('U'),
+            'lastName' => $lastName,
+            'birthDate' => $birthDate->format(\DateTime::ATOM),
         ]);
+    }
+
+    public function getBirthDate(): \DateTimeImmutable
+    {
+        return DateTimeImmutable::createFromFormat(\DateTime::ATOM, $this->birthDate);
     }
 }
 ```
 
-In case of a command without any payload you could extend `Gears\CQRS\AbstractEmptyCommand`
+**Why not just setting the variables directly in the named constructor?** Calling the Command constructor through `new self()` triggers the mechanisms to assure immutability and payload type
+
+In case of a command without any payload you could extend `Gears\CQRS\AbstractEmptyCommand` which is directly instantiable
 
 ```php
 use Gears\CQRS\AbstractEmptyCommand;
 
 class CreateUserCommand extends AbstractEmptyCommand
 {
-    public static function instance(): self {
-        return new self();
-    }
 }
 ```
 
 #### Async commands
 
-Having command assuring all of its payload is composed only of scalar values proves handy when you want to delegate command handling to a message queue system such as RabbitMQ, Gearman or Apache Kafka, serializing/deserializing scalar values is trivial in any format and language
+Having command assuring all of its payload is composed only of scalar values proves handy when you want to delegate command handling to a message queue system such as RabbitMQ, Gearman or Apache Kafka, serializing/deserializing scalar values is trivial in any language
 
-Asynchronous behaviour must be implemented at CommandBus level, command bus must be able to identify async commands (a map of commands, implementing an interface, by a payload parameter, ...) and enqueue them 
+Asynchronous behaviour must be implemented at CommandBus level, command bus must be able to identify async commands (through a map, implementing an interface, by a payload parameter, etc) and enqueue them
 
 If you want to have asynchronous behaviour on your CommandBus have a look [phpgears/cqrs-async](https://github.com/phpgears/cqrs-async), there you'll find all the necessary pieces to start your async command bus, for example using queue-interop with [phpgears/cqrs-async-queue-interop](https://github.com/phpgears/cqrs-async-queue-interop)
 
 ### Queries
 
-Queries are DTOs that carry all the information for a request to be made to the data source
+Queries, like Commands, are immutable DTOs that carry all the information for a request to be made to the data source. A Query should be valid from the moment it is created and thus do not allow to mutable its properties
  
- You can create your own by implementing `Gears\CQRS\Query` or extend from `Gears\CQRS\AbstractQuery` which ensures query immutability and payload is composed only of scalar values. AbstractQuery has a protected constructor forcing you to create a custom static named constructors
+Extend from `Gears\CQRS\AbstractQuery` to ensure Query immutability. Unlike Command a Query is able to hold non scalar properties. AbstractQuery has a protected constructor forcing you to create a custom static named constructors
 
 ```php
 use Gears\CQRS\AbstractQuery;
 
+/**
+ * @method getIdentity(): UserIdentity.
+ */
 class FindUserQuery extends AbstractQuery
 {
-    public static function fromName(string $name): self 
+    private $identity;
+
+    public static function fromIdentity(UserIdentity $identity): self 
     {
-        return new self(['name' => $name]);
+        return new self(['identity' => $identity]);
     }
 }
 ```
 
-In case of a query without any payload you could extend `Gears\CQRS\AbstractEmptyQuery`
+**Why not just setting the variables directly in the named constructor?** Calling the Query constructor through `new self()` triggers the mechanisms to assure immutability
+
+In case of a query without any payload you could extend `Gears\CQRS\AbstractEmptyQuery` which is directly instantiable
 
 ```php
 use Gears\CQRS\AbstractEmptyQuery;
 
 class FindAllUsersQuery extends AbstractEmptyQuery
 {
-    public static function instance(): self {
-        return new self();
-    }
 }
 ```
 
 ### Handlers
 
-Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\CQRS\QueryHandler` respectively on their corresponding buses
+Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\CQRS\QueryHandler` respectively through their corresponding buses
 
-`AbstractCommandHandler` and `AbstractQueryHandler` are provided in this package, this abstract classes verifies the type of the command/query so you can focus only on implementing the handling logic
+`AbstractCommandHandler` and `AbstractQueryHandler` are provided in this package, this abstract classes verifies the type of the Command/Query so you can focus only on implementing the handling logic
 
 ```php
 class CreateUserCommandHandler extends AbstractCommandHandler
@@ -129,7 +146,7 @@ class CreateUserCommandHandler extends AbstractCommandHandler
 
         $user = new User(
             $command->getName(),
-            $command->getLastname(),
+            $command->getLastName(),
             $command->getBirthDate()
         );
 
@@ -148,22 +165,24 @@ class FindUserQueryHandler extends AbstractQueryHandler
     {
         /* @var FindUserQuery $query */
 
-        // Retrieve user from persistence by it's name $query->getName()
+        // Retrieve user from persistence by its identity: $query->getIdentity()
 
         return new UserDTO(/* parameters */);
     }
 }
 ```
 
+By default, Command and Query types are defined as their own class names. If you prefer to use any other string as type is as simple as overriding the methods `getCommandType` and `getQueryType` respectively
+
 Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built out of DTOs and how they hold their payload
 
-### Buses
+### CQRS Bus
 
 Only `Gears\CQRS\CommandBus` and `Gears\CQRS\QueryBus` interfaces are provided, you can easily use any of the good bus libraries available out there by simply adding an adapter layer
 
 #### Implementations
 
-CQRS buses implementations currently available
+CQRS bus implementations currently available:
 
 * [phpgears/cqrs-symfony-messenger](https://github.com/phpgears/cqrs-symfony-messenger) uses Symfony's Messenger
 * [phpgears/cqrs-tactician](https://github.com/phpgears/cqrs-tactician) uses League's Tactician

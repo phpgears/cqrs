@@ -14,28 +14,23 @@ declare(strict_types=1);
 namespace Gears\CQRS;
 
 use Gears\CQRS\Exception\QueryException;
-use Gears\DTO\ScalarPayloadBehaviour;
-use Gears\Immutability\ImmutabilityBehaviour;
+use Gears\DTO\PayloadBehaviour;
 
 /**
  * Abstract immutable query.
  */
 abstract class AbstractQuery implements Query
 {
-    use ImmutabilityBehaviour, ScalarPayloadBehaviour {
-        ScalarPayloadBehaviour::__call insteadof ImmutabilityBehaviour;
-    }
+    use PayloadBehaviour;
 
     /**
      * AbstractQuery constructor.
      *
-     * @param mixed[] $parameters
+     * @param iterable<mixed> $payload
      */
-    final protected function __construct(array $parameters)
+    final protected function __construct(iterable $payload)
     {
-        $this->assertImmutable();
-
-        $this->setPayload($parameters);
+        $this->setPayload($payload);
     }
 
     /**
@@ -44,6 +39,16 @@ abstract class AbstractQuery implements Query
     public function getQueryType(): string
     {
         return static::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string[]
+     */
+    final protected function getAllowedInterfaces(): array
+    {
+        return [Query::class];
     }
 
     /**
@@ -75,15 +80,5 @@ abstract class AbstractQuery implements Query
     final public function __unserialize(array $data): void
     {
         throw new QueryException(\sprintf('Query "%s" cannot be unserialized', static::class));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string[]
-     */
-    final protected function getAllowedInterfaces(): array
-    {
-        return [Query::class];
     }
 }

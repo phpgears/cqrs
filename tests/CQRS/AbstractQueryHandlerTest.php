@@ -40,6 +40,6 @@ class AbstractQueryHandlerTest extends TestCase
     {
         $handler = new AbstractQueryHandlerStub();
 
-        static::assertInstanceOf(DTO::class, $handler->handle(AbstractQueryStub::instance()));
+        static::assertInstanceOf(DTO::class, $handler->handle(AbstractQueryStub::instance([])));
     }
 }

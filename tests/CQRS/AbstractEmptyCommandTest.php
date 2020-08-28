@@ -29,6 +29,20 @@ class AbstractEmptyCommandTest extends TestCase
         static::assertEquals(AbstractEmptyCommandStub::class, $stub->getCommandType());
     }
 
+    public function testNoPayload(): void
+    {
+        $stub = AbstractEmptyCommandStub::instance();
+
+        static::assertEquals([], $stub->getPayload());
+    }
+
+    public function testToArray(): void
+    {
+        $stub = AbstractEmptyCommandStub::instance();
+
+        static::assertEquals([], $stub->toArray());
+    }
+
     public function testReconstitution(): void
     {
         $stub = AbstractEmptyCommandStub::reconstitute(['parameter' => 'value']);

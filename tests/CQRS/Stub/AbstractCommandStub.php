@@ -21,12 +21,27 @@ use Gears\CQRS\AbstractCommand;
 class AbstractCommandStub extends AbstractCommand
 {
     /**
+     * @var string
+     */
+    private $parameter;
+
+    /**
      * Instantiate command.
+     *
+     * @param iterable<mixed> $payload
      *
      * @return self
      */
-    public static function instance(): self
+    public static function instance(iterable $payload): self
     {
-        return new self([]);
+        return new self($payload);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getParameter(): ?string
+    {
+        return $this->parameter !== null ? \strtolower($this->parameter) : null;
     }
 }

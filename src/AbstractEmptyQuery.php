@@ -14,24 +14,21 @@ declare(strict_types=1);
 namespace Gears\CQRS;
 
 use Gears\CQRS\Exception\QueryException;
-use Gears\DTO\ScalarPayloadBehaviour;
-use Gears\Immutability\ImmutabilityBehaviour;
+use Gears\DTO\PayloadBehaviour;
 
 /**
  * Abstract empty immutable query.
  */
 abstract class AbstractEmptyQuery implements Query
 {
-    use ImmutabilityBehaviour, ScalarPayloadBehaviour {
-        ScalarPayloadBehaviour::__call insteadof ImmutabilityBehaviour;
-    }
+    use PayloadBehaviour;
 
     /**
      * AbstractEmptyQuery constructor.
      */
-    final protected function __construct()
+    final public function __construct()
     {
-        $this->assertImmutable();
+        $this->setPayload(null);
     }
 
     /**
@@ -40,6 +37,24 @@ abstract class AbstractEmptyQuery implements Query
     public function getQueryType(): string
     {
         return static::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    final public function getPayload(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string[]
+     */
+    final protected function getAllowedInterfaces(): array
+    {
+        return [Query::class];
     }
 
     /**
@@ -71,15 +86,5 @@ abstract class AbstractEmptyQuery implements Query
     final public function __wakeup(): void
     {
         throw new QueryException(\sprintf('Query "%s" cannot be unserialized', static::class));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string[]
-     */
-    final protected function getAllowedInterfaces(): array
-    {
-        return [Query::class];
     }
 }

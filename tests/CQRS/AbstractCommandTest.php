@@ -24,9 +24,30 @@ class AbstractCommandTest extends TestCase
 {
     public function testCommandType(): void
     {
-        $stub = AbstractCommandStub::instance();
+        $stub = AbstractCommandStub::instance([]);
 
         static::assertEquals(AbstractCommandStub::class, $stub->getCommandType());
+    }
+
+    public function testNoPayload(): void
+    {
+        $stub = AbstractCommandStub::instance([]);
+
+        static::assertEquals(['parameter' => null], $stub->getPayload());
+    }
+
+    public function testPayload(): void
+    {
+        $stub = AbstractCommandStub::instance(['parameter' => 'Value']);
+
+        static::assertEquals(['parameter' => 'value'], $stub->getPayload());
+    }
+
+    public function testToArray(): void
+    {
+        $stub = AbstractCommandStub::instance(['parameter' => 'Value']);
+
+        static::assertEquals(['parameter' => 'Value'], $stub->toArray());
     }
 
     public function testReconstitution(): void
@@ -41,7 +62,7 @@ class AbstractCommandTest extends TestCase
         $this->expectException(CommandException::class);
         $this->expectExceptionMessage('Command "Gears\CQRS\Tests\Stub\AbstractCommandStub" cannot be serialized');
 
-        \serialize(AbstractCommandStub::instance());
+        \serialize(AbstractCommandStub::instance([]));
     }
 
     public function testNoDeserialization(): void

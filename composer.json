@@ -25,7 +25,7 @@
   "prefer-stable": true,
   "require": {
     "php": "^7.1",
-    "phpgears/dto": "~0.3.1"
+    "phpgears/dto": "dev-reflection-based"
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.8",

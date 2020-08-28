@@ -14,24 +14,21 @@ declare(strict_types=1);
 namespace Gears\CQRS;
 
 use Gears\CQRS\Exception\CommandException;
-use Gears\DTO\ScalarPayloadBehaviour;
-use Gears\Immutability\ImmutabilityBehaviour;
+use Gears\DTO\PayloadBehaviour;
 
 /**
  * Abstract empty immutable serializable command.
  */
 abstract class AbstractEmptyCommand implements Command
 {
-    use ImmutabilityBehaviour, ScalarPayloadBehaviour {
-        ScalarPayloadBehaviour::__call insteadof ImmutabilityBehaviour;
-    }
+    use PayloadBehaviour;
 
     /**
      * AbstractEmptyCommand constructor.
      */
-    final protected function __construct()
+    final public function __construct()
     {
-        $this->assertImmutable();
+        $this->setPayload(null);
     }
 
     /**
@@ -44,14 +41,40 @@ abstract class AbstractEmptyCommand implements Command
 
     /**
      * {@inheritdoc}
+     */
+    final public function getPayload(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    final public function toArray(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    final public static function reconstitute(array $parameters)
+    final public static function reconstitute(iterable $payload)
     {
         $commandClass = static::class;
 
         return new $commandClass();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string[]
+     */
+    final protected function getAllowedInterfaces(): array
+    {
+        return [Command::class];
     }
 
     /**
@@ -83,15 +106,5 @@ abstract class AbstractEmptyCommand implements Command
     final public function __wakeup(): void
     {
         throw new CommandException(\sprintf('Command "%s" cannot be unserialized', static::class));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string[]
-     */
-    final protected function getAllowedInterfaces(): array
-    {
-        return [Command::class];
     }
 }

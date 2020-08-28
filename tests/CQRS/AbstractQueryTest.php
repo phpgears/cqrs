@@ -24,7 +24,7 @@ class AbstractQueryTest extends TestCase
 {
     public function testQueryType(): void
     {
-        $stub = AbstractQueryStub::instance();
+        $stub = AbstractQueryStub::instance([]);
 
         static::assertEquals(AbstractQueryStub::class, $stub->getQueryType());
     }
@@ -34,7 +34,7 @@ class AbstractQueryTest extends TestCase
         $this->expectException(QueryException::class);
         $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractQueryStub" cannot be serialized');
 
-        \serialize(AbstractQueryStub::instance());
+        \serialize(AbstractQueryStub::instance([]));
     }
 
     public function testNoDeserialization(): void

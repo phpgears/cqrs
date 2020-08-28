@@ -26,15 +26,6 @@ interface Command
     public function getCommandType(): string;
 
     /**
-     * Check parameter existence.
-     *
-     * @param string $parameter
-     *
-     * @return bool
-     */
-    public function has(string $parameter): bool;
-
-    /**
      * Get parameter.
      *
      * @param string $parameter
@@ -51,11 +42,18 @@ interface Command
     public function getPayload(): array;
 
     /**
+     * Export command properties as array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array;
+
+    /**
      * Reconstitute command.
      *
-     * @param mixed[] $parameters
+     * @param iterable<mixed> $payload
      *
      * @return mixed|self
      */
-    public static function reconstitute(array $parameters);
+    public static function reconstitute(iterable $payload);
 }

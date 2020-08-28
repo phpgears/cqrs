@@ -38,19 +38,8 @@ class AbstractCommandHandlerTest extends TestCase
     public function testHandling(): void
     {
         $handler = new AbstractCommandHandlerStub();
-        $handler->handle(AbstractCommandStub::instance());
+        $handler->handle(AbstractCommandStub::instance([]));
 
         static::assertTrue(true);
-    }
-
-    public function testReconstitute(): void
-    {
-        $command = AbstractCommandStub::reconstitute(['parameter' => 'one']);
-
-        static::assertTrue($command->has('parameter'));
-
-        $emptyCommand = AbstractEmptyCommandStub::reconstitute(['parameter' => 'one']);
-
-        static::assertFalse($emptyCommand->has('parameter'));
     }
 }
