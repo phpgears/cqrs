@@ -19,20 +19,23 @@ use Gears\CQRS\Command;
 /**
  * Abstract command handler stub class.
  */
-class AbstractCommandHandlerStub extends AbstractCommandHandler
+final class AbstractCommandHandlerStub extends AbstractCommandHandler
 {
     /**
      * {@inheritdoc}
      */
     protected function getSupportedCommandTypes(): array
     {
-        return [AbstractCommandStub::class];
+        return [
+            AbstractCommandStub::class,
+            AbstractUnhandledEmptyCommandStub::class,
+        ];
     }
 
     /**
-     * {@inheritdoc}
+     * @param Command $command
      */
-    protected function handleCommand(Command $command): void
+    private function handleAbstractCommandStub(Command $command): void
     {
     }
 }

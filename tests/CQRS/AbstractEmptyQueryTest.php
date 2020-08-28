@@ -29,6 +29,13 @@ class AbstractEmptyQueryTest extends TestCase
         static::assertEquals(AbstractEmptyQueryStub::class, $stub->getQueryType());
     }
 
+    public function testNoPayload(): void
+    {
+        $stub = AbstractEmptyQueryStub::instance();
+
+        static::assertEquals([], $stub->getPayload());
+    }
+
     public function testNoSerialization(): void
     {
         $this->expectException(QueryException::class);

@@ -40,11 +40,12 @@ Extend from `Gears\CQRS\AbstractCommand` to ensure command immutability and the 
 
 ```php
 use Gears\CQRS\AbstractCommand;
+
 /**
  * @method getName(): string
  * @method getLastName(): string
  */
-class CreateUserCommand extends AbstractCommand
+final class CreateUserCommand extends AbstractCommand
 {
     private $name;
 
@@ -78,7 +79,7 @@ In case of a command without any payload you could extend `Gears\CQRS\AbstractEm
 ```php
 use Gears\CQRS\AbstractEmptyCommand;
 
-class CreateUserCommand extends AbstractEmptyCommand
+final class CreateUserCommand extends AbstractEmptyCommand
 {
 }
 ```
@@ -103,7 +104,7 @@ use Gears\CQRS\AbstractQuery;
 /**
  * @method getIdentity(): UserIdentity.
  */
-class FindUserQuery extends AbstractQuery
+final class FindUserQuery extends AbstractQuery
 {
     private $identity;
 
@@ -121,7 +122,7 @@ In case of a query without any payload you could extend `Gears\CQRS\AbstractEmpt
 ```php
 use Gears\CQRS\AbstractEmptyQuery;
 
-class FindAllUsersQuery extends AbstractEmptyQuery
+final class FindAllUsersQuery extends AbstractEmptyQuery
 {
 }
 ```
@@ -136,18 +137,16 @@ A Command/Query Handler can be set to handle one or more Command/Query. It is co
 
 ```php
 use Gears\CQRS\AbstractCommandHandler;
-use Gears\CQRS\Command;
 
-class CreateUserCommandHandler extends AbstractCommandHandler
+final class CreateUserCommandHandler extends AbstractCommandHandler
 {
     protected function getSupportedCommandTypes(): array
     {
         return [CreateUserCommand::class];
     }
 
-    protected function handleCommand(Command $command): void
+    private function handleCreateUserCommand(CreateUserCommand $command): void
     {
-        /* @var CreateUserCommand $command */
 
         $user = new User(
             $command->getName(),
@@ -155,7 +154,7 @@ class CreateUserCommandHandler extends AbstractCommandHandler
             $command->getBirthDate()
         );
 
-        // ...
+        // Store the newly created user
     }
 }
 ```
@@ -163,19 +162,16 @@ class CreateUserCommandHandler extends AbstractCommandHandler
 ```php
 use Gears\DTO\DTO;
 use Gears\CQRS\AbstractQueryHandler;
-use Gears\CQRS\Query;
 
-class FindUserQueryHandler extends AbstractQueryHandler
+final class FindUserQueryHandler extends AbstractQueryHandler
 {
     protected function getSupportedQueryTypes(): array
     {
         return [FindUserQuery::class];
     }
 
-    protected function handleQuery(Query $query): DTO
+    private function handleFindUserQuery(FindUserQuery $query): DTO
     {
-        /* @var FindUserQuery $query */
-
         // Retrieve user from persistence by its identity: $query->getIdentity()
 
         return new UserDTO(/* parameters */);
@@ -183,7 +179,9 @@ class FindUserQueryHandler extends AbstractQueryHandler
 }
 ```
 
-By default, Command and Query types are defined as their own class names. If you prefer to use any other string as type is as simple as overriding the methods `getCommandType` and `getQueryType` respectively
+The method to handle each command is composed as "handle" followed by Command/Query type. If the type is a namespaced class only the class name is used. If you prefer other nomenclature you can override ` AbstractCommandHandler::getHandlerMethod` or `AbstractQueryHandler::getHandlerMethod`
+
+By default, CommandType and QueryType are defined as the Command/Query `::class`. If you prefer to use any other string as type it's as simple as overriding the methods `AbstractCommand::getCommandType` and `AbstractQuery::getQueryType` respectively. Remember this will impact how the handlers support each Command/Query, see above
 
 Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built out of DTOs and how they hold their payload
 

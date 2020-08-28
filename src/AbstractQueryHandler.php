@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Gears\CQRS;
 
 use Gears\CQRS\Exception\InvalidQueryException;
-use Gears\DTO\DTO;
+use Gears\CQRS\Exception\InvalidQueryHandlerException;
 
 abstract class AbstractQueryHandler implements QueryHandler
 {
@@ -23,7 +23,7 @@ abstract class AbstractQueryHandler implements QueryHandler
      *
      * @throws InvalidQueryException
      */
-    final public function handle(Query $query): DTO
+    final public function handle(Query $query)
     {
         if (!\in_array($query->getQueryType(), $this->getSupportedQueryTypes(), true)) {
             throw new InvalidQueryException(\sprintf(
@@ -34,7 +34,33 @@ abstract class AbstractQueryHandler implements QueryHandler
             ));
         }
 
-        return $this->handleQuery($query);
+        $method = $this->getHandlerMethod($query);
+        if (!\method_exists($this, $method)) {
+            throw new InvalidQueryHandlerException(
+                \sprintf('Query handler method "%s" does not exist in "%s"', $method, static::class)
+            );
+        }
+
+        $reflection = new \ReflectionMethod(static::class, $method);
+        $reflection->setAccessible(true);
+
+        return $reflection->invoke($this, $query);
+    }
+
+    /**
+     * Get method to handle the query.
+     *
+     * @param Query $query
+     *
+     * @return string
+     */
+    protected function getHandlerMethod(Query $query): string
+    {
+        $typeParts = \explode('\\', $query->getQueryType());
+        /** @var string $queryType */
+        $queryType = \end($typeParts);
+
+        return 'handle' . \ucfirst($queryType);
     }
 
     /**
@@ -43,13 +69,4 @@ abstract class AbstractQueryHandler implements QueryHandler
      * @return string[]
      */
     abstract protected function getSupportedQueryTypes(): array;
-
-    /**
-     * Handle query.
-     *
-     * @param Query $query
-     *
-     * @return DTO
-     */
-    abstract protected function handleQuery(Query $query): DTO;
 }

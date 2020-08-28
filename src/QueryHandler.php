@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\CQRS;
 
-use Gears\DTO\DTO;
-
 interface QueryHandler
 {
     /**
@@ -22,7 +20,7 @@ interface QueryHandler
      *
      * @param Query $query
      *
-     * @return DTO
+     * @return mixed
      */
-    public function handle(Query $query): DTO;
+    public function handle(Query $query);
 }

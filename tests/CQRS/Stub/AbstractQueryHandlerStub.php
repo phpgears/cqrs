@@ -20,20 +20,25 @@ use Gears\DTO\DTO;
 /**
  * Abstract query handler stub class.
  */
-class AbstractQueryHandlerStub extends AbstractQueryHandler
+final class AbstractQueryHandlerStub extends AbstractQueryHandler
 {
     /**
      * {@inheritdoc}
      */
     protected function getSupportedQueryTypes(): array
     {
-        return [AbstractQueryStub::class];
+        return [
+            AbstractQueryStub::class,
+            AbstractUnhandledEmptyQueryStub::class,
+        ];
     }
 
     /**
-     * {@inheritdoc}
+     * @param Query $query
+     *
+     * @return DTO
      */
-    protected function handleQuery(Query $query): DTO
+    private function handleAbstractQueryStub(Query $query): DTO
     {
         return DTOStub::instance();
     }
