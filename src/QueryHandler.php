@@ -16,7 +16,7 @@ namespace Gears\CQRS;
 interface QueryHandler
 {
     /**
-     * Handle query command.
+     * Handle query.
      *
      * @param Query $query
      *

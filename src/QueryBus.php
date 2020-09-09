@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace Gears\CQRS;
 
-use Gears\DTO\DTO;
-
 interface QueryBus
 {
     /**
-     * Handle query command.
+     * Handle query.
      *
      * @param Query $query
      *
-     * @return DTO
+     * @return mixed
      */
-    public function handle(Query $query): DTO;
+    public function handle(Query $query);
 }
