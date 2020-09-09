@@ -34,7 +34,7 @@ require './vendor/autoload.php';
 
 ### Commands
 
-Commands are immutable DTOs that carry all the information for an action to take place. A Command should be valid from the moment it is created and thus do not allow to mutable its properties
+Commands are immutable DTOs that carry all the information for an action to take place. A Command should be valid from the moment it is created and thus do not allow to mutate its properties
 
 Extend from `Gears\CQRS\AbstractCommand` to ensure command immutability and the payload is only composed of **scalar values**, allowing for easy serialization and interoperability. AbstractCommand has a protected constructor forcing you to create custom static named constructors
 
@@ -72,7 +72,7 @@ final class CreateUserCommand extends AbstractCommand
 }
 ```
 
-**Why not just setting the variables directly in the named constructor?** Calling the Command constructor through `new self()` triggers the mechanisms to assure immutability and payload type
+**Why not just setting the variables directly in the named constructor?** Calling the Command constructor through `new self()` triggers the mechanisms to assure immutability and payload type check
 
 In case of a command without any payload you could extend `Gears\CQRS\AbstractEmptyCommand` which is directly instantiable
 
@@ -94,7 +94,7 @@ If you want to have asynchronous behaviour on your CommandBus have a look [phpge
 
 ### Queries
 
-Queries, like Commands, are immutable DTOs that carry all the information for a request to be made to the data source. A Query should be valid from the moment it is created and thus do not allow to mutable its properties
+Queries, like Commands, are immutable DTOs that carry all the information for a request to be made to the data source. A Query should be valid from the moment it is created and thus do not allow to mutate its properties
  
 Extend from `Gears\CQRS\AbstractQuery` to ensure Query immutability. Unlike Command a Query is able to hold non scalar properties. AbstractQuery has a protected constructor forcing you to create a custom static named constructors
 
@@ -131,7 +131,7 @@ final class FindAllUsersQuery extends AbstractEmptyQuery
 
 Commands and Queries are handed over to `Gears\CQRS\CommandHandler` and `Gears\CQRS\QueryHandler` respectively through their corresponding buses
 
-`AbstractCommandHandler` and `AbstractQueryHandler` are provided in this package, this abstract classes verifies the type of the Command/Query so you can focus only on implementing the handling logic
+`AbstractCommandHandler` and `AbstractQueryHandler`, provided in this package, are abstract classes that verify the type of the received Command/Query, so you can focus only on implementing the handling logic
 
 A Command/Query Handler can be set to handle one or more Command/Query. It is controlled by the returned Command/Query types at `getSupportedQueryTypes` and `getSupportedCommandTypes`
 
@@ -147,7 +147,6 @@ final class CreateUserCommandHandler extends AbstractCommandHandler
 
     private function handleCreateUserCommand(CreateUserCommand $command): void
     {
-
         $user = new User(
             $command->getName(),
             $command->getLastName(),
@@ -183,11 +182,11 @@ The method to handle each command is composed as "handle" followed by Command/Qu
 
 By default, CommandType and QueryType are defined as the Command/Query `::class`. If you prefer to use any other string as type it's as simple as overriding the methods `AbstractCommand::getCommandType` and `AbstractQuery::getQueryType` respectively. Remember this will impact how the handlers support each Command/Query, see above
 
-Have a look at [phpgears/dto](https://github.com/phpgears/dto) fo a better understanding of how commands and queries are built out of DTOs and how they hold their payload
+Have a look at [phpgears/dto](https://github.com/phpgears/dto) for a better understanding of how commands and queries are built out of DTOs and how they hold their payload
 
 ### CQRS Bus
 
-Only `Gears\CQRS\CommandBus` and `Gears\CQRS\QueryBus` interfaces are provided, you can easily use any of the good bus libraries available out there by simply adding an adapter layer
+Only `Gears\CQRS\CommandBus` and `Gears\CQRS\QueryBus` interfaces can be found in this package, you can easily use any of the good bus libraries available out there by simply adding an adapter layer
 
 #### Implementations
 
