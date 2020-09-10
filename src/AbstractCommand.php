@@ -63,7 +63,7 @@ abstract class AbstractCommand implements Command, \Serializable
      */
     public function __serialize(): array
     {
-        return ['payload' => $this->getPayloadRaw()];
+        return $this->getPayloadRaw();
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class AbstractCommand implements Command, \Serializable
      */
     public function __unserialize(array $data): void
     {
-        $this->setPayload($data['payload']);
+        $this->setPayload($data);
     }
 
     /**

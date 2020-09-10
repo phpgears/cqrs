@@ -61,7 +61,7 @@ class AbstractCommandTest extends TestCase
         $stub = AbstractCommandStub::instance(['parameter' => 'value']);
 
         $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
-            ? 'O:41:"Gears\CQRS\Tests\Stub\AbstractCommandStub":1:{s:7:"payload";a:1:{s:9:"parameter";s:5:"value";}}'
+            ? 'O:41:"Gears\CQRS\Tests\Stub\AbstractCommandStub":1:{s:9:"parameter";s:5:"value";}'
             : 'C:41:"Gears\CQRS\Tests\Stub\AbstractCommandStub":34:{a:1:{s:9:"parameter";s:5:"value";}}';
 
         static::assertSame($serialized, \serialize($stub));
