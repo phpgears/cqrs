@@ -18,7 +18,7 @@ use Gears\DTO\PayloadBehaviour;
 /**
  * Abstract empty immutable serializable command.
  */
-abstract class AbstractEmptyCommand implements Command
+abstract class AbstractEmptyCommand implements Command, \Serializable
 {
     use PayloadBehaviour;
 
@@ -67,12 +67,48 @@ abstract class AbstractEmptyCommand implements Command
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function __serialize(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->setPayload([]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize(): string
+    {
+        return \serialize([]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $serialized
+     */
+    public function unserialize($serialized): void
+    {
+        $this->setPayload([]);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return string[]
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [Command::class];
+        return [Command::class, \Serializable::class];
     }
 }

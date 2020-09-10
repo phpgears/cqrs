@@ -88,9 +88,7 @@ final class CreateUserCommand extends AbstractEmptyCommand
 
 Having command assuring all of its payload is composed only of scalar values proves handy when you want to delegate command handling to a message queue system such as RabbitMQ, Gearman or Apache Kafka, serializing/deserializing scalar values is trivial in any language
 
-Asynchronous behaviour must be implemented at CommandBus level, command bus must be able to identify async commands (through a map, implementing an interface, by a payload parameter, etc) and enqueue them
-
-If you want to have asynchronous behaviour on your CommandBus have a look [phpgears/cqrs-async](https://github.com/phpgears/cqrs-async), there you'll find all the necessary pieces to start your async command bus, for example using queue-interop with [phpgears/cqrs-async-queue-interop](https://github.com/phpgears/cqrs-async-queue-interop)
+Asynchronicity must be implemented at CommandBus level, meaning the command bus implementation must be able to identify which commands must be treated asynchronously and enqueue them
 
 ### Queries
 

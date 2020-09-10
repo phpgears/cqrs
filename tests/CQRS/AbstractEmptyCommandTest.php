@@ -42,10 +42,25 @@ class AbstractEmptyCommandTest extends TestCase
         static::assertEquals([], $stub->toArray());
     }
 
-    public function testReconstitution(): void
+    public function testReconstitute(): void
     {
         $stub = AbstractEmptyCommandStub::reconstitute(['parameter' => 'value']);
 
         static::assertEquals([], $stub->getPayload());
+    }
+
+    public function testSerialization(): void
+    {
+        $stub = AbstractEmptyCommandStub::instance();
+
+        $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
+            ? 'O:46:"Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub":0:{}'
+            : 'C:46:"Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub":6:{a:0:{}}';
+
+        static::assertSame($serialized, \serialize($stub));
+
+        /** @var AbstractEmptyCommandStub $unserializedStub */
+        $unserializedStub = \unserialize($serialized);
+        static::assertSame($stub->getPayload(), $unserializedStub->getPayload());
     }
 }
