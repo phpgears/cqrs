@@ -81,7 +81,7 @@ abstract class AbstractCommand implements Command, \Serializable
      */
     public function serialize(): string
     {
-        return \addslashes(\serialize($this->getPayloadRaw()));
+        return \serialize($this->getPayloadRaw());
     }
 
     /**
@@ -91,7 +91,7 @@ abstract class AbstractCommand implements Command, \Serializable
      */
     public function unserialize($serialized): void
     {
-        $this->setPayload(\unserialize(\stripslashes($serialized), ['allowed_classes' => false]));
+        $this->setPayload(\unserialize($serialized, ['allowed_classes' => false]));
     }
 
     /**
