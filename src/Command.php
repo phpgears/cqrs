@@ -53,7 +53,7 @@ interface Command
      *
      * @param iterable<mixed> $payload
      *
-     * @return mixed|self
+     * @return static
      */
     public static function reconstitute(iterable $payload);
 }
