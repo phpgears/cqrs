@@ -29,7 +29,9 @@ class AbstractCommandHandlerTest extends TestCase
     public function testInvalidCommandType(): void
     {
         $this->expectException(InvalidCommandException::class);
-        $this->expectExceptionMessageRegExp('/^Command handler ".+" can only handle ".+" command types, ".+" given$/');
+        $this->expectExceptionMessageRegExp(
+            '/^Command handler ".+" can only handle ".+" command types, ".+" given\.$/'
+        );
 
         $handler = new AbstractCommandHandlerStub();
         $handler->handle(AbstractEmptyCommandStub::instance());
