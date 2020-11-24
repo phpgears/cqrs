@@ -30,7 +30,7 @@
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.8",
     "friendsofphp/php-cs-fixer": "^2.16",
-    "infection/infection": "^0.13|^0.15",
+    "infection/infection": "^0.13|^0.15|^0.18|^0.19",
     "overtrue/phplint": "^1.2",
     "pedrotroller/php-cs-custom-fixer": "^2.19",
     "phpmd/phpmd": "^2.8",

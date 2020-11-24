@@ -32,7 +32,7 @@ class AbstractEmptyQueryTest extends TestCase
     public function testNoSerialization(): void
     {
         $this->expectException(QueryException::class);
-        $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub" cannot be serialized');
+        $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub" cannot be serialized.');
 
         \serialize(AbstractEmptyQueryStub::instance());
     }
@@ -40,7 +40,7 @@ class AbstractEmptyQueryTest extends TestCase
     public function testNoDeserialization(): void
     {
         $this->expectException(QueryException::class);
-        $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub" cannot be unserialized');
+        $this->expectExceptionMessage('Query "Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub" cannot be unserialized.');
 
         \unserialize('O:44:"Gears\CQRS\Tests\Stub\AbstractEmptyQueryStub":0:{}');
     }

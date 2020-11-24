@@ -59,7 +59,7 @@ abstract class AbstractEmptyCommand implements Command
      */
     final public function __serialize(): array
     {
-        throw new CommandException(\sprintf('Command "%s" cannot be serialized', static::class));
+        throw new CommandException(\sprintf('Command "%s" cannot be serialized.', static::class));
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractEmptyCommand implements Command
      */
     final public function __unserialize(array $data): void
     {
-        throw new CommandException(\sprintf('Command "%s" cannot be unserialized', static::class));
+        throw new CommandException(\sprintf('Command "%s" cannot be unserialized.', static::class));
     }
 
     /**
@@ -77,12 +77,12 @@ abstract class AbstractEmptyCommand implements Command
      */
     final public function __sleep(): array
     {
-        throw new CommandException(\sprintf('Command "%s" cannot be serialized', static::class));
+        throw new CommandException(\sprintf('Command "%s" cannot be serialized.', static::class));
     }
 
     final public function __wakeup(): void
     {
-        throw new CommandException(\sprintf('Command "%s" cannot be unserialized', static::class));
+        throw new CommandException(\sprintf('Command "%s" cannot be unserialized.', static::class));
     }
 
     /**

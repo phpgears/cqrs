@@ -47,7 +47,7 @@ abstract class AbstractEmptyQuery implements Query
      */
     final public function __serialize(): array
     {
-        throw new QueryException(\sprintf('Query "%s" cannot be serialized', static::class));
+        throw new QueryException(\sprintf('Query "%s" cannot be serialized.', static::class));
     }
 
     /**
@@ -57,7 +57,7 @@ abstract class AbstractEmptyQuery implements Query
      */
     final public function __unserialize(array $data): void
     {
-        throw new QueryException(\sprintf('Query "%s" cannot be unserialized', static::class));
+        throw new QueryException(\sprintf('Query "%s" cannot be unserialized.', static::class));
     }
 
     /**
@@ -65,12 +65,12 @@ abstract class AbstractEmptyQuery implements Query
      */
     final public function __sleep(): array
     {
-        throw new QueryException(\sprintf('Query "%s" cannot be serialized', static::class));
+        throw new QueryException(\sprintf('Query "%s" cannot be serialized.', static::class));
     }
 
     final public function __wakeup(): void
     {
-        throw new QueryException(\sprintf('Query "%s" cannot be unserialized', static::class));
+        throw new QueryException(\sprintf('Query "%s" cannot be unserialized.', static::class));
     }
 
     /**

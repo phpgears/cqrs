@@ -39,7 +39,7 @@ class AbstractEmptyCommandTest extends TestCase
     public function testNoSerialization(): void
     {
         $this->expectException(CommandException::class);
-        $this->expectExceptionMessage('Command "Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub" cannot be serialized');
+        $this->expectExceptionMessage('Command "Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub" cannot be serialized.');
 
         \serialize(AbstractEmptyCommandStub::instance());
     }
@@ -48,7 +48,7 @@ class AbstractEmptyCommandTest extends TestCase
     {
         $this->expectException(CommandException::class);
         $this->expectExceptionMessage(
-            'Command "Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub" cannot be unserialized'
+            'Command "Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub" cannot be unserialized.'
         );
 
         \unserialize('O:46:"Gears\CQRS\Tests\Stub\AbstractEmptyCommandStub":0:{}');

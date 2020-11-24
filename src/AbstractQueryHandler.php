@@ -27,7 +27,7 @@ abstract class AbstractQueryHandler implements QueryHandler
     {
         if ($query->getQueryType() !== $this->getSupportedQueryType()) {
             throw new InvalidQueryException(\sprintf(
-                'Query handler "%s" can only handle "%s" queries, "%s" given',
+                'Query handler "%s" can only handle "%s" queries, "%s" given.',
                 static::class,
                 $this->getSupportedQueryType(),
                 $query->getQueryType()
